@@ -1,8 +1,8 @@
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {catchError, Observable, throwError} from 'rxjs';
-import {RlResponse} from '../commons/api-commons';
-import {environment} from '../enviroment';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { RlResponse } from '../commons/api-commons';
+import { environment } from '../enviroment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +10,11 @@ import {environment} from '../enviroment';
 export class StudyDocumentsApi {
   private apiUrl = environment.apiStudyDocumentsUrl;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  getStudyDocuments(filters: GetStudyDocumentsFilters): Observable<RlResponse<GetStudyDocumentsData>> {
+  getStudyDocuments(
+    filters: GetStudyDocumentsFilters
+  ): Observable<RlResponse<GetStudyDocumentsData>> {
     const httpParams = new HttpParams();
     if (filters.name) {
       httpParams.append('name', filters.name);
@@ -26,16 +27,9 @@ export class StudyDocumentsApi {
     }
     httpParams.append('page', filters.page.toString());
     httpParams.append('size', filters.size.toString());
-    return this.http
-      .get<RlResponse<GetStudyDocumentsData>>(this.apiUrl, {
-        params: httpParams,
-      })
-      .pipe(
-        catchError((error) => {
-          console.log(error);
-          return throwError(() => error);
-        })
-      );
+    return this.http.get<RlResponse<GetStudyDocumentsData>>(this.apiUrl, {
+      params: httpParams,
+    });
   }
 }
 
