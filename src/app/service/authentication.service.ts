@@ -1,10 +1,13 @@
-import { Injectable } from "@angular/core";
+import {Injectable} from "@angular/core";
 
-@Injectable()
-export class AuthtenticationService {
-  constructor() {}
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthenticationService {
+  constructor() {
+  }
 
-  getToken(): String {
+  getToken(): string {
     return 'token';
   }
 }
