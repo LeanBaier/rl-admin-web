@@ -1,8 +1,8 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { RlResponse } from '../commons/api-commons';
-import { environment } from '../enviroment';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {RlResponse} from '../commons/api-commons';
+import {environment} from '../enviroment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,24 +10,24 @@ import { environment } from '../enviroment';
 export class StudyDocumentsApi {
   private apiUrl = environment.apiStudyDocumentsUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
-  getStudyDocuments(
-    filters: GetStudyDocumentsFilters
-  ): Observable<RlResponse<GetStudyDocumentsData>> {
-    const httpParams = new HttpParams();
+  getStudyDocuments(filters: GetStudyDocumentsFilters): Observable<RlResponse<GetStudyDocumentsData>> {
+    let httpParams = new HttpParams();
     if (filters.name) {
-      httpParams.append('name', filters.name);
+      httpParams = httpParams.set('name', filters.name);
     }
     if (filters.level) {
-      httpParams.append('level', filters.level);
+      httpParams = httpParams.set('level', filters.level);
     }
     if (filters.topic) {
-      httpParams.append('topic', filters.topic);
+      httpParams = httpParams.set('topic', filters.topic);
     }
-    httpParams.append('page', filters.page.toString());
-    httpParams.append('size', filters.size.toString());
-    return this.http.get<RlResponse<GetStudyDocumentsData>>(this.apiUrl, {
+    httpParams = httpParams.set('page', filters.page.toString())
+      .set('size', filters.size.toString());
+
+    return this.http.get<RlResponse<GetStudyDocumentsData>>(this.apiUrl + '/api/v1/study-documents', {
       params: httpParams,
     });
   }

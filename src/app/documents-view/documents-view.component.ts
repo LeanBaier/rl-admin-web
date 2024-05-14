@@ -25,7 +25,7 @@ export class DocumentsViewComponent {
       name: null,
       level: null,
       topic: null,
-      page: 0,
+      page: 1,
       size: 10
     };
     this.studyDocumentsService
