@@ -24,7 +24,7 @@ export class AuthenticationApi {
 }
 
 export interface AuthRequest {
-  username: string;
+  email: string;
   password: string;
 }
 

@@ -1,0 +1,16 @@
+{
+  "/auth-server": {
+    "target": "http://refactoringlife.online:8080",
+    "pathRewrite": {
+      "^/auth-server": ""
+    },
+    "changeOrigin": true
+  },
+  "/api-study-documents": {
+    "target": "http://refactoringlife.online:9001",
+    "pathRewrite": {
+      "^/api-study-documents": ""
+    },
+    "changeOrigin": true
+  }
+}

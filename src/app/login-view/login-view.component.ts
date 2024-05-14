@@ -23,6 +23,7 @@ export class LoginViewComponent {
     if (!password) {
       password = '';
     }
+    console.log(username, password)
     this.authService.login(username, password);
   }
 }
