@@ -9,6 +9,9 @@ import {Router} from '@angular/router';
   providedIn: 'root',
 })
 export class AuthenticationService {
+
+  interval: any;
+
   constructor(private authApi: AuthenticationApi, private router: Router) {
   }
 
@@ -19,11 +22,14 @@ export class AuthenticationService {
       .subscribe((response) => {
         this.saveSession(response);
         this.router.navigate(['/']);
+        this.interval = setSessionTimeoutInterval(this.refreshSession, response.accessExpiresIn);
       });
   }
 
   getAccessToken(): string {
-    this.refreshSession();
+    if (this.interval == null) {
+      this.refreshSession();
+    }
     let session = sessionStorage.getItem(constants.tokenKey);
     if (session) {
       let sessionData: SessionData = JSON.parse(session);
@@ -38,13 +44,14 @@ export class AuthenticationService {
     if (session) {
       let sessionData: SessionData = JSON.parse(session);
       if (sessionData?.authResponse) {
-        if (new Date(sessionData.expiresAt).getTime() <= Date.now()) {
-          console.log("Refresh session");
-          this.authApi
-            .refreshToken({refreshToken: sessionData.authResponse.refreshToken})
-            .pipe(catchError((error) => throwError(() => error)))
-            .subscribe((response) => this.saveSession(response));
-        }
+        console.log("Refresh session");
+        this.authApi
+          .refreshToken({refreshToken: sessionData.authResponse.refreshToken})
+          .subscribe((response) => {
+            this.saveSession(response)
+            clearInterval(this.interval);
+            this.interval = setSessionTimeoutInterval(this.refreshSession, response.accessExpiresIn);
+          });
       }
       return;
     }
@@ -58,11 +65,15 @@ export class AuthenticationService {
       JSON.stringify({
         authResponse: response,
         expiresAt: new Date(
-          Date.now() + ((response.accessExpiresIn - 20) * 1000)
+          Date.now() + ((response.accessExpiresIn - 30) * 1000)
         ),
       })
     );
   }
+}
+
+function setSessionTimeoutInterval(method: () => void, timeout: number){
+  return setInterval(method, (timeout - 30) * 1000);
 }
 
 

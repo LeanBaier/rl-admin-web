@@ -24,6 +24,12 @@ export class StudyDocumentsApi {
     if (filters.topic) {
       httpParams = httpParams.set('topic', filters.topic);
     }
+    if (filters.orderBy) {
+      httpParams = httpParams.set('orderBy', filters.orderBy);
+    }
+    if (filters.order) {
+      httpParams = httpParams.set('order', filters.order);
+    }
     httpParams = httpParams.set('page', filters.page.toString())
       .set('size', filters.size.toString());
 
@@ -37,9 +43,25 @@ export interface GetStudyDocumentsFilters {
   name: string | null;
   level: string | null;
   topic: string | null;
+  order: string | null;
+  orderBy: string | null;
   page: number;
   size: number;
+
 }
+
+export function GetStudyDocumentsFiltersDefault(): GetStudyDocumentsFilters {
+  return {
+    name: null,
+    level: null,
+    topic: null,
+    order: null,
+    orderBy: null,
+    page: 1,
+    size: 10
+  }
+}
+
 
 export interface GetStudyDocumentsData {
   documents: StudyDocumentDTO[];
