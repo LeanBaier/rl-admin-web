@@ -1,0 +1,60 @@
+<div class="container">
+  <form (ngSubmit)="onSubmit(); $event.stopPropagation();">
+    <div class="container text-start">
+      <div class="row align-items-start">
+        <div class="col col-12 col-lg-4 mt-3">
+          <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Titulo">
+          </div>
+        </div>
+        <div class="col col-12 col-lg-4 mt-lg-3">
+          <div class="mb-3 placeholder-glow" [ngClass]="isLoadingFields ? 'placeholder-glow' : ''">
+            <select class="form-select placeholder-sm bg-light" [ngClass]="isLoadingFields ? 'placeholder' : ''"
+                    aria-label="Default select example">
+              <option hidden selected>Seleccione un tema</option>
+              <option *ngFor="let field of filterFields?.topics" value="{{field.name}}">{{ field.description }}
+            </select>
+          </div>
+          <div class="mb-3" [ngClass]="isLoadingFields ? 'placeholder-glow' : ''">
+            <select class="form-select placeholder-sm bg-light" [ngClass]="isLoadingFields ? 'placeholder' : ''"
+                    aria-label="Default select example">
+              <option hidden selected>Seleccione un nível</option>
+              <option *ngFor="let field of filterFields?.levels" value="{{field.name}}">{{ field.description }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col col-12 col-lg-4 mt-lg-3">
+          <div class="mb-3 placeholder-glow" [ngClass]="isLoadingFields ? 'placeholder-glow' : ''">
+            <select class="form-select placeholder-sm bg-light" [ngClass]="isLoadingFields ? 'placeholder' : ''"
+                    aria-label="Default select example">
+              <option hidden selected>Ordenar por</option>
+              <option *ngFor="let field of filterFields?.orderByFields" value="{{field.name}}">{{ field.description }}
+            </select>
+          </div>
+          <div class="mb-3" [ngClass]="isLoadingFields ? 'placeholder-glow' : ''">
+            <select class="form-select placeholder-sm bg-light" [ngClass]="isLoadingFields ? 'placeholder' : ''"
+                    aria-label="Default select example">
+              <option hidden selected>Ordenar de manera</option>
+              <option *ngFor="let field of filterFields?.orderDirections"
+                      value="{{field.order}}">{{ field.description }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-end">
+      <div class="col text-end">
+        <button type="submit" class="btn btn-outline-primary m-2" [ngClass]="isSearchingDocuments || isLoadingFields ? 'disabled' : ''">
+          <span class="spinner-grow spinner-grow-sm" *ngIf="isSearchingDocuments || isLoadingFields"></span>
+          <span *ngIf="!isSearchingDocuments || isLoadingFields" class="m-2"></span>Buscar
+        </button>
+        <button type="button" class="btn btn-outline-success m-2" routerLink="study-documents/create" [ngClass]="isSearchingDocuments || isLoadingFields ? 'disabled' : ''">
+          <span class="m-2"></span>Crear Documento
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

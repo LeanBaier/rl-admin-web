@@ -37,6 +37,10 @@ export class StudyDocumentsApi {
       params: httpParams,
     });
   }
+
+  getStudyDocumentFields(): Observable<RlResponse<GetStudyDocumentFieldsDTO>> {
+    return this.http.get<RlResponse<GetStudyDocumentFieldsDTO>>(this.apiUrl + '/api/v1/study-documents/fields',);
+  }
 }
 
 export interface GetStudyDocumentsFilters {
@@ -88,4 +92,33 @@ export interface StudyDocumentTopicDTO {
   idTopic: number;
   name: string;
   description: string;
+}
+
+
+export interface FieldTopicDTO {
+  name: string
+  description: string
+}
+
+export interface FieldLevelDTO {
+  name: string
+  description: string
+}
+
+export interface FieldOrderByFieldDTO {
+  name: string
+  description: string
+}
+
+export interface FieldOrderDirectionDTO {
+  order: string
+  description: string
+}
+
+export interface GetStudyDocumentFieldsDTO {
+  topics: FieldTopicDTO[];
+  levels: FieldLevelDTO[];
+  orderByFields: FieldOrderByFieldDTO[];
+  orderDirections: FieldOrderDirectionDTO[];
+
 }

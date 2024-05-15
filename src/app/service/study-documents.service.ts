@@ -1,6 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {GetStudyDocumentsData, GetStudyDocumentsFilters, StudyDocumentsApi,} from '../api/study-documents.api';
+import {
+  GetStudyDocumentFieldsDTO,
+  GetStudyDocumentsData,
+  GetStudyDocumentsFilters,
+  StudyDocumentsApi,
+} from '../api/study-documents.api';
 import {RlResponse} from '../commons/api-commons';
 
 @Injectable({
@@ -12,5 +17,9 @@ export class StudyDocumentsService {
 
   getStudyDocuments(filters: GetStudyDocumentsFilters): Observable<RlResponse<GetStudyDocumentsData>> {
     return this.studyDocumentsApi.getStudyDocuments(filters);
+  }
+
+  getStudyDocumentFields(): Observable<RlResponse<GetStudyDocumentFieldsDTO>> {
+    return this.studyDocumentsApi.getStudyDocumentFields();
   }
 }
