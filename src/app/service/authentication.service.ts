@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {catchError, throwError} from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import {AuthenticationApi, AuthResponse} from '../api/authentication.api';
 import {constants} from '../enviroment';
 import {SessionNotFoundError} from '../error-handler/authentication.error-handler';
@@ -13,6 +13,14 @@ export class AuthenticationService {
   interval: any;
 
   constructor(private authApi: AuthenticationApi, private router: Router) {
+    document.addEventListener(
+      "visibilitychange"
+      , () => {
+        if (!document.hidden) {
+          this.refreshSession();
+        }
+      }
+    );
   }
 
   login(usuario: string, password: string) {
@@ -33,27 +41,32 @@ export class AuthenticationService {
     let session = sessionStorage.getItem(constants.tokenKey);
     if (session) {
       let sessionData: SessionData = JSON.parse(session);
+      if (new Date(sessionData.expiresAt) <= new Date()) {
+        this.refreshSession();
+      }
       return sessionData.authResponse.accessToken;
     }
 
     throw new SessionNotFoundError();
   }
 
-  refreshSession() {
+  refreshSession(): Observable<any> {
     let session = sessionStorage.getItem(constants.tokenKey);
     if (session) {
       let sessionData: SessionData = JSON.parse(session);
       if (sessionData?.authResponse) {
-        console.log("Refresh session");
-        this.authApi
-          .refreshToken({refreshToken: sessionData.authResponse.refreshToken})
-          .subscribe((response) => {
-            this.saveSession(response)
-            clearInterval(this.interval);
-            this.interval = setSessionTimeoutInterval(this.refreshSession, response.accessExpiresIn);
-          });
+        if (new Date(sessionData.expiresAt) <= new Date()) {
+          console.log("Refresh session");
+          this.authApi
+            .refreshToken({refreshToken: sessionData.authResponse.refreshToken})
+            .subscribe((response) => {
+              this.saveSession(response)
+              clearInterval(this.interval);
+              this.interval = setSessionTimeoutInterval(this.refreshSession, response.accessExpiresIn);
+            });
+        }
       }
-      return;
+      return throwError(() => new SessionNotFoundError());
     }
 
     throw new SessionNotFoundError();
@@ -72,7 +85,7 @@ export class AuthenticationService {
   }
 }
 
-function setSessionTimeoutInterval(method: () => void, timeout: number){
+function setSessionTimeoutInterval(method: () => void, timeout: number) {
   return setInterval(method, (timeout - 30) * 1000);
 }
 

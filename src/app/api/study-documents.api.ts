@@ -69,6 +69,10 @@ export function GetStudyDocumentsFiltersDefault(): GetStudyDocumentsFilters {
 
 export interface GetStudyDocumentsData {
   documents: StudyDocumentDTO[];
+  totalPages: number | null;
+  totalElements: number | null;
+  page: number | null;
+  elements: number | null;
 }
 
 export interface StudyDocumentDTO {

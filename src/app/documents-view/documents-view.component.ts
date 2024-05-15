@@ -9,18 +9,20 @@ import {
 import {RlMessage} from '../commons/api-commons';
 import {DocumentsFiltersComponent} from "./documents-filters/documents-filters.component";
 import {StudyDocumentsService} from "../service/study-documents.service";
+import {DocumentsTableComponent} from "./documents-table/documents-table.component";
 
 @Component({
   selector: 'app-documents-view',
   standalone: true,
   imports: [
-    DocumentsFiltersComponent
+    DocumentsFiltersComponent,
+    DocumentsTableComponent
   ],
   templateUrl: './documents-view.component.html',
   styleUrl: './documents-view.component.scss',
 })
 export class DocumentsViewComponent {
-  documents: GetStudyDocumentsData = {documents: []};
+  documents: GetStudyDocumentsData = {documents: [], totalPages: 0, totalElements: 0, page: 0, elements: 0};
   messages: RlMessage[] = [];
   filters: GetStudyDocumentsFilters = GetStudyDocumentsFiltersDefault();
   isSearchingDocuments = false;

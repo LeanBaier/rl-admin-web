@@ -1,5 +1,6 @@
 <div class="container">
-  <app-documents-filters (onSubmitCallback)="searchStudyDocuments(filters)"
+  <app-documents-filters (onSubmitCallback)="searchStudyDocuments($event)"
                          [isSearchingDocuments]="isSearchingDocuments" [isLoadingFields]="isLoadingFields"
-                         [filterFields]="filterFields"/>
+                         [filterFields]="filterFields" [totalPages]="documents.totalPages ?? 0"/>
+  <app-documents-table [documents]="documents.documents"/>
 </div>

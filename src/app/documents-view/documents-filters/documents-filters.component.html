@@ -1,43 +1,66 @@
 <div class="container">
-  <form (ngSubmit)="onSubmit(); $event.stopPropagation();">
+  <form (ngSubmit)="updatePage(1); $event.stopPropagation();" [formGroup]="filterForm">
     <div class="container text-start">
       <div class="row align-items-start">
         <div class="col col-12 col-lg-4 mt-3">
-          <div class="mb-3">
-            <input type="text" class="form-control" placeholder="Titulo">
+          <div>
+            <label for="tittle" class="form-label">Titulo</label>
+            <div class="mb-3">
+              <input type="text" class="form-control" placeholder="Escriba el titulo" id="tittle">
+            </div>
+          </div>
+          <div>
+            <label for="pageSize" class="form-label">Registros por pagina</label>
+            <div class="mb-3">
+              <select class="form-select placeholder-sm bg-light" formControlName="size" id="pageSize"
+                      [ngClass]="{'placeholder': isLoadingFields, 'disable': filterFields?.topics?.length == 0}"
+                      aria-label="Default select example">
+                <option [ngValue]="10" selected>10</option>
+                <option [ngValue]="20">20</option>
+                <option [ngValue]="50">50</option>
+              </select>
+            </div>
           </div>
         </div>
         <div class="col col-12 col-lg-4 mt-lg-3">
-          <div class="mb-3 placeholder-glow" [ngClass]="isLoadingFields ? 'placeholder-glow' : ''">
-            <select class="form-select placeholder-sm bg-light" [ngClass]="isLoadingFields ? 'placeholder' : ''"
+          <div class="mb-3 placeholder-glow" [ngClass]="{'placeholder-glow': isLoadingFields}">
+            <label for="level" class="form-label">Nivel</label>
+            <select class="form-select placeholder-sm bg-light" formControlName="level" id="level"
+                    [ngClass]="{'placeholder': isLoadingFields, 'disable': filterFields?.levels?.length == 0}"
                     aria-label="Default select example">
-              <option hidden selected>Seleccione un tema</option>
-              <option *ngFor="let field of filterFields?.topics" value="{{field.name}}">{{ field.description }}
+              <option [ngValue]="null" selected>Todos</option>
+              <option *ngFor="let field of filterFields?.levels" [ngValue]="field.name">{{ field.description }}
             </select>
           </div>
-          <div class="mb-3" [ngClass]="isLoadingFields ? 'placeholder-glow' : ''">
-            <select class="form-select placeholder-sm bg-light" [ngClass]="isLoadingFields ? 'placeholder' : ''"
+          <div class="mb-3" [ngClass]="{'placeholder-glow': isLoadingFields}">
+            <label for="topic" class="form-label">Tema</label>
+            <select class="form-select placeholder-sm bg-light" formControlName="topic" id="topic"
+                    [ngClass]="{'placeholder': isLoadingFields, 'disable': filterFields?.topics?.length == 0}"
                     aria-label="Default select example">
-              <option hidden selected>Seleccione un nível</option>
-              <option *ngFor="let field of filterFields?.levels" value="{{field.name}}">{{ field.description }}
+              <option [ngValue]="null" selected>Todos</option>
+              <option *ngFor="let field of filterFields?.topics" [value]="field.name">{{ field.description }}
               </option>
             </select>
           </div>
         </div>
         <div class="col col-12 col-lg-4 mt-lg-3">
           <div class="mb-3 placeholder-glow" [ngClass]="isLoadingFields ? 'placeholder-glow' : ''">
+            <label for="orderBy" class="form-label">Ordenar por</label>
             <select class="form-select placeholder-sm bg-light" [ngClass]="isLoadingFields ? 'placeholder' : ''"
+                    formControlName="orderBy" id="orderBy"
                     aria-label="Default select example">
-              <option hidden selected>Ordenar por</option>
-              <option *ngFor="let field of filterFields?.orderByFields" value="{{field.name}}">{{ field.description }}
+              <option [ngValue]="null" selected>Seleccione</option>
+              <option *ngFor="let field of filterFields?.orderByFields" [ngValue]="field.name">{{ field.description }}
             </select>
           </div>
           <div class="mb-3" [ngClass]="isLoadingFields ? 'placeholder-glow' : ''">
+            <label for="order" class="form-label">Orden</label>
             <select class="form-select placeholder-sm bg-light" [ngClass]="isLoadingFields ? 'placeholder' : ''"
+                    formControlName="order" id="order"
                     aria-label="Default select example">
-              <option hidden selected>Ordenar de manera</option>
+              <option [ngValue]="null" selected>Seleccione</option>
               <option *ngFor="let field of filterFields?.orderDirections"
-                      value="{{field.order}}">{{ field.description }}
+                      [value]="field.order">{{ field.description }}
               </option>
             </select>
           </div>
@@ -45,14 +68,53 @@
       </div>
     </div>
 
-    <div class="row justify-content-end">
-      <div class="col text-end">
-        <button type="submit" class="btn btn-outline-primary m-2" [ngClass]="isSearchingDocuments || isLoadingFields ? 'disabled' : ''">
+    <div class="row mt-3">
+      <div class="col col-sm-12 col-md-6 col-lg-6 text-start">
+        <nav *ngIf="totalPages > 0">
+          <ul class="pagination">
+            <li class="page-item" [ngClass]="{'disabled': filterForm.get('page')?.value - 1 <= 0}">
+              <a type="button" class="page-link" (click)="updatePage(1)">
+                1
+                <i class="bi bi-arrow-bar-left"></i>
+                Primera
+              </a>
+            </li>
+            <li class="page-item" *ngIf="filterForm.get('page')?.value - 1 > 0">
+              <a type="button" class="page-link"
+                      (click)="updatePage((filterForm.get('page')?.value ?? totalPages) - 1)">
+                {{ (filterForm.get('page')?.value ?? totalPages) - 1 }}
+              </a>
+            </li>
+            <li class="page-item">
+              <a type="button" class="page-link disabled" >{{ (filterForm.get('page')?.value) }}</a>
+            </li>
+            <li class="page-item" *ngIf=" (filterForm.get('page')?.value ?? totalPages) + 1 <= totalPages">
+              <a type="button" class="page-link"
+                      (click)="updatePage((filterForm.get('page')?.value ?? totalPages) + 1)">
+                {{ (filterForm.get('page')?.value ?? totalPages) + 1 }}
+              </a>
+            </li>
+            <li class="page-item"
+                [ngClass]="{'disabled': (filterForm.get('page')?.value ?? totalPages) + 1 > totalPages}">
+              <a type="button" class="page-link"
+                      (click)="updatePage(totalPages)">
+                Ultima
+                <i class="bi bi-arrow-bar-right"></i>
+                {{ totalPages }}
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      <div class="col col-sm-12 col-md-6 text-end">
+        <button type="submit" class="btn btn-outline-primary"
+                [ngClass]="isSearchingDocuments || isLoadingFields ? 'disabled' : ''">
           <span class="spinner-grow spinner-grow-sm" *ngIf="isSearchingDocuments || isLoadingFields"></span>
-          <span *ngIf="!isSearchingDocuments || isLoadingFields" class="m-2"></span>Buscar
+          <span *ngIf="!isSearchingDocuments" class="m-2"></span> Buscar
         </button>
-        <button type="button" class="btn btn-outline-success m-2" routerLink="study-documents/create" [ngClass]="isSearchingDocuments || isLoadingFields ? 'disabled' : ''">
-          <span class="m-2"></span>Crear Documento
+        <button type="button" class="btn btn-outline-success mx-2" routerLink="study-documents/create"
+                [ngClass]="isSearchingDocuments || isLoadingFields ? 'disabled' : ''">
+          <span class="m-2"></span> Crear Documento
         </button>
       </div>
     </div>
