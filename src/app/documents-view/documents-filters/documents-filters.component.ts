@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {RouterLink} from "@angular/router";
-import {GetStudyDocumentFieldsDTO, GetStudyDocumentsFilters} from "../../api/study-documents.api";
+import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
+import {GetStudyDocumentFieldsDTO, GetStudyDocumentsFilters, SaveStudyDocumentDTO} from "../../api/study-documents.api";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
+import {DocumentFormComponent} from "../document-form/document-form.component";
 
 @Component({
   selector: 'app-documents-filters',
@@ -13,22 +14,29 @@ import {NgClass, NgForOf, NgIf} from "@angular/common";
     NgClass,
     NgIf,
     NgForOf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLinkActive,
+    RouterOutlet,
+    DocumentFormComponent,
   ],
   templateUrl: './documents-filters.component.html',
   styleUrl: './documents-filters.component.scss'
 })
 export class DocumentsFiltersComponent {
   @Output("onSubmitCallback") onSubmitCallback: EventEmitter<GetStudyDocumentsFilters> = new EventEmitter();
+  @Output("onCreateDocumentCallback") onCreateDocumentCallback: EventEmitter<any> = new EventEmitter();
   @Input({required: true}) isSearchingDocuments: boolean = false;
   @Input({required: true}) isLoadingFields: boolean = false;
   @Input({required: true}) filterFields: GetStudyDocumentFieldsDTO | null = null;
   @Input({required: true}) totalPages: number = 0;
+  @ViewChild(DocumentFormComponent) documentForm: DocumentFormComponent | null = null;
 
+  showCreateDocument: boolean = false;
   filterForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
     this.filterForm = this.formBuilder.group({
+      title: [null],
       name: [null],
       level: [null],
       topic: [null],
@@ -62,6 +70,15 @@ export class DocumentsFiltersComponent {
   updatePage(page: number) {
     this.filterForm.get('page')?.setValue(page);
     this.onSubmit();
+  }
+
+  toggleCreateDocumentForm() {
+    this.documentForm?.cleanForm();
+    this.showCreateDocument = !this.showCreateDocument;
+  }
+
+  onCreateDocument(request: SaveStudyDocumentDTO) {
+    this.onCreateDocumentCallback.emit(request);
   }
 
 }

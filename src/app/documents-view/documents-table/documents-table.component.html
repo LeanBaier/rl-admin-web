@@ -1,0 +1,37 @@
+<div>
+  <div *ngIf="documents.length === 0; else documents_table">
+    <div class="row align-items-start mt-3">
+      <div class="col text-center">
+        <hr class="border border-primary border-2 opacity-10">
+        <p class="text-warning-emphasis"><i class="bi bi-card-text"></i> No se encontraron resultados</p>
+      </div>
+    </div>
+  </div>
+  <ng-template #documents_table>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Titulo</th>
+        <th scope="col">Nivel</th>
+        <th scope="col">Tema</th>
+        <th scope="col">Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let document of documents">
+        <td>{{ document.idStudyDocument }}</td>
+        <td>{{ document.title }}</td>
+        <td>{{ document.level.description }}</td>
+        <td>{{ document.topic.description }}</td>
+        <td>
+          <div class="col">
+            <button class="btn btn-outline-primary mx-2"><i class="bi bi-pencil-square"></i></button>
+            <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </ng-template>
+</div>

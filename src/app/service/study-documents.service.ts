@@ -4,6 +4,8 @@ import {
   GetStudyDocumentFieldsDTO,
   GetStudyDocumentsData,
   GetStudyDocumentsFilters,
+  SaveStudyDocumentDTO,
+  StudyDocumentDTO,
   StudyDocumentsApi,
 } from '../api/study-documents.api';
 import {RlResponse} from '../commons/api-commons';
@@ -21,5 +23,9 @@ export class StudyDocumentsService {
 
   getStudyDocumentFields(): Observable<RlResponse<GetStudyDocumentFieldsDTO>> {
     return this.studyDocumentsApi.getStudyDocumentFields();
+  }
+
+  createNewDocument(request: SaveStudyDocumentDTO): Observable<RlResponse<StudyDocumentDTO>> {
+    return this.studyDocumentsApi.createNewDocument(request);
   }
 }

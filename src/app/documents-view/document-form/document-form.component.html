@@ -1,0 +1,82 @@
+<div class="modal fade" [id]="inputId" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-body">
+        <form (ngSubmit)="onSubmit();$event.stopPropagation();" [formGroup]="documentForm">
+          <div class="container text-start">
+            <div class="row align-items-start">
+              <div class="col col-12 col-lg-8 mt-3">
+                <div>
+                  <label for="title" class="form-label">Titulo</label>
+                  <div class="mb-3">
+                    <input type="text" class="form-control" formControlName="title" placeholder="Escriba el titulo..."
+                           id="title">
+                  </div>
+                </div>
+                <div>
+                  <label for="content" class="form-label">Contenido</label>
+                  <div class="mb-3">
+                    <textarea type="text" [rows]="4" class="form-control" formControlName="content"
+                              placeholder="Escriba el contenido..."
+                              id="content"></textarea>
+                  </div>
+                </div>
+                <div>
+                  <label for="modalContent" class="form-label">Modal</label>
+                  <div class="mb-3">
+                    <textarea type="text" [rows]="4" class="form-control" formControlName="modal"
+                              placeholder="Escriba el contenido del modal..." id="modalContent"></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="col col-12 col-lg-4 mt-lg-3">
+                <div class="container">
+                  <div class="row ">
+                    <div class="mb-3 placeholder-glow" [ngClass]="{'placeholder-glow': isLoadingFields}">
+                      <label for="level" class="form-label">Nivel</label>
+                      <select class="form-select placeholder-sm bg-light" formControlName="level" id="level"
+                              [ngClass]="{'placeholder': isLoadingFields, 'disable': fields?.levels?.length == 0}"
+                              aria-label="Default select example">
+                        <option [ngValue]="null" disabled>Seleccione...</option>
+                        <option *ngFor="let field of fields?.levels" [ngValue]="field.idLevel">{{ field.description }}
+                      </select>
+                    </div>
+                    <div class="mb-3" [ngClass]="{'placeholder-glow': isLoadingFields}">
+                      <label for="topic" class="form-label">Tema</label>
+                      <select class="form-select placeholder-sm bg-light" formControlName="topic" id="topic"
+                              [ngClass]="{'placeholder': isLoadingFields, 'disable': fields?.topics?.length == 0}"
+                              aria-label="Default select example">
+                        <option [ngValue]="null" disabled>Seleccione...</option>
+                        <option *ngFor="let field of fields?.topics" [value]="field.idTopic">{{ field.description }}
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="order" class="form-label">Orden</label>
+                      <div class="mb-3">
+                        <input type="number" class="form-control" formControlName="order"
+                               id="order"/>
+                      </div>
+                    </div>
+                    <div>
+                      <label for="icon" class="form-label">Icono</label>
+                      <div class="mb-3">
+                        <input type="text" class="form-control" formControlName="icon"
+                               id="icon"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row align-items-end">
+                    <div class="col text-end">
+                      <button type="submit" class="btn btn-primary mt-3">Guardar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

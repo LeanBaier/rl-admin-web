@@ -5,6 +5,7 @@ import {
   GetStudyDocumentsData,
   GetStudyDocumentsFilters,
   GetStudyDocumentsFiltersDefault,
+  SaveStudyDocumentDTO,
 } from '../api/study-documents.api';
 import {RlMessage} from '../commons/api-commons';
 import {DocumentsFiltersComponent} from "./documents-filters/documents-filters.component";
@@ -82,6 +83,25 @@ export class DocumentsViewComponent {
         }
         this.isLoadingFields = false
       });
+  }
+
+  createNewDocument(request: SaveStudyDocumentDTO) {
+    this.studyDocumentsService.createNewDocument(request).pipe(
+      catchError((error) => {
+        return throwError(() => error)
+      })
+    ).subscribe(response => {
+      if (response.data) {
+        this.searchStudyDocuments(GetStudyDocumentsFiltersDefault())
+      }
+      if (response.messages) {
+        this.messages = response.messages;
+      }
+      if (response.error) {
+        console.log(response.error);
+        throwError(() => response.error);
+      }
+    });
   }
 
 }

@@ -4,9 +4,10 @@
       <div class="row align-items-start">
         <div class="col col-12 col-lg-4 mt-3">
           <div>
-            <label for="tittle" class="form-label">Titulo</label>
+            <label for="title" class="form-label">Titulo</label>
             <div class="mb-3">
-              <input type="text" class="form-control" placeholder="Escriba el titulo" id="tittle">
+              <input type="text" class="form-control" formControlName="title" placeholder="Escriba el titulo"
+                     id="title">
             </div>
           </div>
           <div>
@@ -81,23 +82,23 @@
             </li>
             <li class="page-item" *ngIf="filterForm.get('page')?.value - 1 > 0">
               <a type="button" class="page-link"
-                      (click)="updatePage((filterForm.get('page')?.value ?? totalPages) - 1)">
+                 (click)="updatePage((filterForm.get('page')?.value ?? totalPages) - 1)">
                 {{ (filterForm.get('page')?.value ?? totalPages) - 1 }}
               </a>
             </li>
             <li class="page-item">
-              <a type="button" class="page-link disabled" >{{ (filterForm.get('page')?.value) }}</a>
+              <a type="button" class="page-link disabled">{{ (filterForm.get('page')?.value) }}</a>
             </li>
             <li class="page-item" *ngIf=" (filterForm.get('page')?.value ?? totalPages) + 1 <= totalPages">
               <a type="button" class="page-link"
-                      (click)="updatePage((filterForm.get('page')?.value ?? totalPages) + 1)">
+                 (click)="updatePage((filterForm.get('page')?.value ?? totalPages) + 1)">
                 {{ (filterForm.get('page')?.value ?? totalPages) + 1 }}
               </a>
             </li>
             <li class="page-item"
                 [ngClass]="{'disabled': (filterForm.get('page')?.value ?? totalPages) + 1 > totalPages}">
               <a type="button" class="page-link"
-                      (click)="updatePage(totalPages)">
+                 (click)="updatePage(totalPages)">
                 Ultima
                 <i class="bi bi-arrow-bar-right"></i>
                 {{ totalPages }}
@@ -110,12 +111,19 @@
         <button type="submit" class="btn btn-outline-primary"
                 [ngClass]="isSearchingDocuments || isLoadingFields ? 'disabled' : ''">
           <span class="spinner-grow spinner-grow-sm" *ngIf="isSearchingDocuments || isLoadingFields"></span>
-          <span *ngIf="!isSearchingDocuments" class="m-2"></span> Buscar
+          <span *ngIf="!isSearchingDocuments" class="m-2"></span> Buscar <i class="bi bi-search"></i>
         </button>
-        <button type="button" class="btn btn-outline-success mx-2" routerLink="study-documents/create"
+        <button type="button" data-bs-toggle="modal" data-bs-target="#createDocumentModal"
+                class="btn btn-outline-success mx-2" (click)="toggleCreateDocumentForm()"
+                routerLinkActive="active"
                 [ngClass]="isSearchingDocuments || isLoadingFields ? 'disabled' : ''">
-          <span class="m-2"></span> Crear Documento
+          <span class="m-2"></span> Crear Documento <i class="bi bi-plus-square-dotted"></i>
         </button>
+      </div>
+      <div class="col">
+        <app-document-form [fields]="filterFields" [isLoadingFields]="isLoadingFields"
+                           (onCreateDocumentCallback)="onCreateDocument($event)"
+                           inputId="createDocumentModal"></app-document-form>
       </div>
     </div>
   </form>
