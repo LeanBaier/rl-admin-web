@@ -21,6 +21,10 @@ export class AuthenticationService {
         }
       }
     );
+
+    addEventListener("focus", (event) => {
+      this.refreshSession();
+    });
   }
 
   login(usuario: string, password: string) {
@@ -55,16 +59,15 @@ export class AuthenticationService {
     if (session) {
       let sessionData: SessionData = JSON.parse(session);
       if (sessionData?.authResponse) {
-        if (new Date(sessionData.expiresAt) <= new Date()) {
-          console.log("Refresh session");
-          this.authApi
-            .refreshToken({refreshToken: sessionData.authResponse.refreshToken})
-            .subscribe((response) => {
-              this.saveSession(response)
-              clearInterval(this.interval);
-              this.interval = setSessionTimeoutInterval(this.refreshSession, response.accessExpiresIn);
-            });
-        }
+        console.log("Refresh session");
+        this.authApi
+          .refreshToken({refreshToken: sessionData.authResponse.refreshToken})
+          .pipe(catchError((error) => throwError(() => new SessionNotFoundError())))
+          .subscribe((response) => {
+            this.saveSession(response)
+            clearInterval(this.interval);
+            this.interval = setSessionTimeoutInterval(this.refreshSession, response.accessExpiresIn);
+          });
       }
       return throwError(() => new SessionNotFoundError());
     }
@@ -72,7 +75,10 @@ export class AuthenticationService {
     throw new SessionNotFoundError();
   }
 
-  saveSession(response: AuthResponse) {
+  saveSession(response
+                :
+                AuthResponse
+  ) {
     sessionStorage.setItem(
       constants.tokenKey,
       JSON.stringify({

@@ -4,6 +4,7 @@ import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import {GetStudyDocumentFieldsDTO, GetStudyDocumentsFilters, SaveStudyDocumentDTO} from "../../api/study-documents.api";
 import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {DocumentFormComponent} from "../document-form/document-form.component";
+import {Modal} from "bootstrap";
 
 @Component({
   selector: 'app-documents-filters',
@@ -31,7 +32,7 @@ export class DocumentsFiltersComponent {
   @Input({required: true}) totalPages: number = 0;
   @ViewChild(DocumentFormComponent) documentForm: DocumentFormComponent | null = null;
 
-  showCreateDocument: boolean = false;
+  newDocumentModal: Modal | null = null;
   filterForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
@@ -74,11 +75,13 @@ export class DocumentsFiltersComponent {
 
   toggleCreateDocumentForm() {
     this.documentForm?.cleanForm();
-    this.showCreateDocument = !this.showCreateDocument;
+    this.newDocumentModal = new Modal(document.getElementById('newDocumentModal')!, {keyboard: false});
+    this.newDocumentModal.show();
   }
 
   onCreateDocument(request: SaveStudyDocumentDTO) {
     this.onCreateDocumentCallback.emit(request);
+    this.newDocumentModal?.hide();
   }
 
 }

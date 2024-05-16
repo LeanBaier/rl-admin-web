@@ -1,6 +1,9 @@
 <div class="container">
-  <app-documents-filters (onSubmitCallback)="searchStudyDocuments($event)" (onCreateDocumentCallback)="createNewDocument($event)"
+  <app-documents-filters (onSubmitCallback)="searchStudyDocuments($event)"
+                         (onCreateDocumentCallback)="createNewDocument($event)"
                          [isSearchingDocuments]="isSearchingDocuments" [isLoadingFields]="isLoadingFields"
                          [filterFields]="filterFields" [totalPages]="documents.totalPages ?? 0"/>
-  <app-documents-table [documents]="documents.documents"/>
+  <app-documents-table [documents]="documents.documents" (onEditDocumentCallback)="saveEditedDocument($event)"
+                       (onDeleteDocumentCallback)="deleteDocumentCallback($event)"
+                       [isLoadingFields]="isLoadingFields" [filterFields]="filterFields"/>
 </div>

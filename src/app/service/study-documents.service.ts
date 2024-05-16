@@ -28,4 +28,12 @@ export class StudyDocumentsService {
   createNewDocument(request: SaveStudyDocumentDTO): Observable<RlResponse<StudyDocumentDTO>> {
     return this.studyDocumentsApi.createNewDocument(request);
   }
+
+  saveEditedDocument(request: SaveStudyDocumentDTO): Observable<RlResponse<StudyDocumentDTO>> {
+    return this.studyDocumentsApi.updateStudyDocument(request);
+  }
+
+  deleteStudyDocument(idStudyDocument: number): Observable<RlResponse<StudyDocumentDTO>> {
+    return this.studyDocumentsApi.deleteStudyDocument(idStudyDocument);
+  }
 }

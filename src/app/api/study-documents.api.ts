@@ -45,6 +45,14 @@ export class StudyDocumentsApi {
   createNewDocument(request: SaveStudyDocumentDTO): Observable<RlResponse<StudyDocumentDTO>> {
     return this.http.post<RlResponse<StudyDocumentDTO>>(this.apiUrl + '/api/v1/study-documents', request);
   }
+
+  updateStudyDocument(request: SaveStudyDocumentDTO): Observable<RlResponse<StudyDocumentDTO>> {
+    return this.http.put<RlResponse<StudyDocumentDTO>>(this.apiUrl + '/api/v1/study-documents/' + request.idStudyDocument, request);
+  }
+
+  deleteStudyDocument(idStudyDocument: number): Observable<RlResponse<StudyDocumentDTO>> {
+    return this.http.delete<RlResponse<StudyDocumentDTO>>(this.apiUrl + '/api/v1/study-documents/' + idStudyDocument);
+  }
 }
 
 export interface SaveStudyDocumentDTO {
@@ -97,6 +105,7 @@ export interface StudyDocumentDTO {
   order: number;
   content: string;
   icon: string;
+  modal: string;
   level: StudyDocumentLevelDTO;
   topic: StudyDocumentTopicDTO;
 }

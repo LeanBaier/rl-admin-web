@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {booleanAttribute, Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgClass, NgForOf} from "@angular/common";
-import {GetStudyDocumentFieldsDTO} from "../../api/study-documents.api";
+import {GetStudyDocumentFieldsDTO, StudyDocumentDTO} from "../../api/study-documents.api";
 
 @Component({
   selector: 'app-document-form',
@@ -17,17 +17,36 @@ import {GetStudyDocumentFieldsDTO} from "../../api/study-documents.api";
 })
 export class DocumentFormComponent {
 
-  @Output("onCreateDocumentCallback") onCreateDocumentCallback: EventEmitter<any> = new EventEmitter();
+  @Output("onSubmitCallback") onSubmitCallback: EventEmitter<any> = new EventEmitter();
   @Input({required: true}) isLoadingFields: boolean = false;
   @Input({required: true}) fields: GetStudyDocumentFieldsDTO | null = null;
   @Input({required: true}) inputId: string = '';
-  @Input() isEditing: boolean = false;
+  @Input({transform: booleanAttribute}) isEditing: boolean = false;
 
   documentForm: FormGroup;
+  document: StudyDocumentDTO | null = null;
 
   constructor(private formBuilder: FormBuilder) {
     this.documentForm = this.formBuilder.group({})
     this.cleanForm();
+  }
+
+  setDocument(document: StudyDocumentDTO) {
+    this.document = document;
+    this.isEditing = true;
+    this.loadFormFromDocument();
+  }
+
+  loadFormFromDocument() {
+    this.documentForm = this.formBuilder.group({
+      title: this.document?.title,
+      content: this.document?.content,
+      level: this.document?.level.idLevel,
+      topic: this.document?.topic.idTopic,
+      modal: this.document?.modal,
+      icon: this.document?.icon,
+      order: this.document?.order
+    });
   }
 
   cleanForm() {
@@ -43,8 +62,8 @@ export class DocumentFormComponent {
   }
 
   onSubmit() {
-    console.log('submit');
-    this.onCreateDocumentCallback.emit({
+    this.onSubmitCallback.emit({
+      idStudyDocument: this.document?.idStudyDocument,
       description: this.documentForm.get('title')?.value,
       title: this.documentForm.get('title')?.value,
       order: this.documentForm.get('order')?.value,

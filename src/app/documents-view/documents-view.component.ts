@@ -104,4 +104,42 @@ export class DocumentsViewComponent {
     });
   }
 
+  saveEditedDocument(request: SaveStudyDocumentDTO) {
+    this.studyDocumentsService.saveEditedDocument(request).pipe(
+      catchError((error) => {
+        return throwError(() => error)
+      })
+    ).subscribe(response => {
+      if (response.data) {
+        this.searchStudyDocuments(GetStudyDocumentsFiltersDefault())
+      }
+      if (response.messages) {
+        this.messages = response.messages;
+      }
+      if (response.error) {
+        console.log(response.error);
+        throwError(() => response.error);
+      }
+    });
+  }
+
+  deleteDocumentCallback(id: number) {
+    this.studyDocumentsService.deleteStudyDocument(id).pipe(
+      catchError((error) => {
+        return throwError(() => error)
+      })
+    ).subscribe(response => {
+      if (response.data) {
+        this.searchStudyDocuments(GetStudyDocumentsFiltersDefault())
+      }
+      if (response.messages) {
+        this.messages = response.messages;
+      }
+      if (response.error) {
+        console.log(response.error);
+        throwError(() => response.error);
+      }
+    });
+  }
+
 }
