@@ -102,7 +102,10 @@
           }
         },
         "deploy": {
-          "builder": "angular-cli-ghpages:deploy"
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "https://LeanBaier.github.io/rl-admin-web/"
+          }
         }
       }
     }
